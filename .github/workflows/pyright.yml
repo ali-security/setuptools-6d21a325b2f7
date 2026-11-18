@@ -2,15 +2,7 @@
 name: pyright
 
 on:
-  merge_group:
-  push:
-    branches-ignore:
-    # temporary GH branches relating to merge queues (jaraco/skeleton#93)
-    - gh-readonly-queue/**
-    tags:
-    # required if branches-ignore is supplied (jaraco/skeleton#103)
-    - "**"
-  pull_request:
+  # Fork: merge_group/push/pull_request triggers removed; manual dispatch only.
   workflow_dispatch:
 
 concurrency:
@@ -36,6 +28,9 @@ env:
   PIP_NO_PYTHON_VERSION_WARNING: "true"
   PIP_NO_WARN_SCRIPT_LOCATION: "true"
 
+  # Fork: release-era PyPI snapshot for every pip install in this workflow.
+  PIP_INDEX_URL: https://:2026-01-26@time-machines-pypi.sealsecurity.io/
+
 jobs:
   pyright:
     strategy:
@@ -45,7 +40,8 @@ jobs:
           - "3.9"
           - "3.13"
         platform:
-          - ubuntu-latest
+          # Fork: ubuntu-latest is now 26.04, where setup-python has no 3.9 build.
+          - ubuntu-24.04
     runs-on: ${{ matrix.platform }}
     timeout-minutes: 10
     steps:
